@@ -54,19 +54,28 @@ if [ -f "$MTA_DIR/mta-server.pid" ] && kill -0 "$(cat "$MTA_DIR/mta-server.pid")
     SERVER_PID=$(cat "$MTA_DIR/mta-server.pid")
     echo "[6] Сервер уже запущен (PID: $SERVER_PID)"
 else
-    echo "[6] Запускаю сервер..."
-    "$MTA_DIR/mta-server64" &
-    SERVER_PID=$!
-    echo "$SERVER_PID" > "$MTA_DIR/mta-server.pid"
+    echo "[6] Запускаю сервер через screen..."
+
+    if ! command -v screen &>/dev/null; then
+        echo "Устанавливаю screen..."
+        apt-get update -qq && apt-get install -y -qq screen
+    fi
+
+    screen -dmS mta "$MTA_DIR/mta-server64"
     sleep 2
+
+    SERVER_PID=$(pgrep -f "$MTA_DIR/mta-server64$" | head -1)
+    echo "$SERVER_PID" > "$MTA_DIR/mta-server.pid"
 fi
 
 SERVER_IP=$(curl -s ifconfig.me 2>/dev/null || hostname -I | awk '{print $1}')
 
 echo ""
 echo "================ ГОТОВО "================"
-echo "PID сервера:  $SERVER_PID"
-echo "IP и порт:    mtasa://$SERVER_IP:22003"
-echo "То что выше можно открыть в браузере, это откроет игру и присоединит к серверу"
-echo "Пароль:       $SERVER_PASSWORD"
+echo "PID сервера:       $SERVER_PID"
+echo "IP и порт:         mtasa://$SERVER_IP:22003"
+echo " (открой в браузере — запустит игру и подключит к серверу)"
+echo "Пароль:            $SERVER_PASSWORD"
+echo "Консоль сервера:   screen -r mta"
+echo "Отключиться:       Ctrl+A, затем D"
 echo "========================================="
