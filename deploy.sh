@@ -24,7 +24,7 @@ sed -i "s|<password>.*</password>|<password>$SERVER_PASSWORD</password>|" "$REPO
 echo "[2] Пароль записан в mtaserver.conf"
 
 # 3. Download and unpack MTA Server (если ещё нет)
-if [ -f "$MTA_DIR/mta-server" ]; then
+if [ -f "$MTA_DIR/mta-server64" ]; then
     echo "[3] MTA сервер уже скачан, пропускаю"
 else
     echo "[3] Скачиваю MTA сервер..."
@@ -64,8 +64,9 @@ fi
 SERVER_IP=$(curl -s ifconfig.me 2>/dev/null || hostname -I | awk '{print $1}')
 
 echo ""
-echo "========== DURKA Racing Server =========="
+echo "================ ГОТОВО "================"
 echo "PID сервера:  $SERVER_PID"
-echo "IP и порт:    $SERVER_IP:22003"
+echo "IP и порт:    mtasa://$SERVER_IP:22003"
+echo "То что выше можно открыть в браузере, это откроет игру и присоединит к серверу"
 echo "Пароль:       $SERVER_PASSWORD"
 echo "========================================="
