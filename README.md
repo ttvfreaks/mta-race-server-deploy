@@ -4,7 +4,7 @@
 
 ## Запуск:
 
-Делаешь сервер на Linux, заходишь туда по ssh и выполняешь команду:
+Делаешь сервер на Ubuntu, заходишь туда по ssh и выполняешь команду:
 ```
 bash <(curl -sL https://raw.githubusercontent.com/ttvfreaks/mta-race-server-deploy/refs/heads/main/deploy.sh)
 ```
