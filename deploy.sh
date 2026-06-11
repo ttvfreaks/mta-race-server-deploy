@@ -55,7 +55,7 @@ if [ -f "$MTA_DIR/mta-server.pid" ] && kill -0 "$(cat "$MTA_DIR/mta-server.pid")
     echo "[6] Сервер уже запущен (PID: $SERVER_PID)"
 else
     echo "[6] Запускаю сервер..."
-    "$MTA_DIR/mta-server" &
+    "$MTA_DIR/mta-server64" &
     SERVER_PID=$!
     echo "$SERVER_PID" > "$MTA_DIR/mta-server.pid"
     sleep 2
