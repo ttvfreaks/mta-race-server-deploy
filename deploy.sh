@@ -49,24 +49,25 @@ echo "[4] robot-mta-server скопирован в $DEATHMATCH_DIR"
 echo "[5] Копирую свои конфиги поверх..."
 cp -r "$REPO_DIR/deathmatch/." "$DEATHMATCH_DIR/"
 
-# 6. Start or show existing server
-if [ -f "$MTA_DIR/mta-server.pid" ] && kill -0 "$(cat "$MTA_DIR/mta-server.pid")" 2>/dev/null; then
-    SERVER_PID=$(cat "$MTA_DIR/mta-server.pid")
-    echo "[6] Сервер уже запущен (PID: $SERVER_PID)"
-else
-    echo "[6] Запускаю сервер через screen..."
+# 6. Start or restart server
+echo "[6] Перезапускаю сервер..."
 
-    if ! command -v screen &>/dev/null; then
-        echo "Устанавливаю screen..."
-        apt-get update -qq && apt-get install -y -qq screen
-    fi
-
-    screen -dmS mta "$MTA_DIR/mta-server64"
+# Остановить существующий экран, если запущен
+if command -v screen &>/dev/null && screen -ls | grep -q mta; then
+    screen -S mta -X quit
     sleep 2
-
-    SERVER_PID=$(pgrep -f "$MTA_DIR/mta-server64$" | head -1)
-    echo "$SERVER_PID" > "$MTA_DIR/mta-server.pid"
 fi
+
+if ! command -v screen &>/dev/null; then
+    echo "Устанавливаю screen..."
+    apt-get update -qq && apt-get install -y -qq screen
+fi
+
+screen -dmS mta "$MTA_DIR/mta-server64"
+sleep 2
+
+SERVER_PID=$(pgrep -f "$MTA_DIR/mta-server64$" | head -1)
+echo "$SERVER_PID" > "$MTA_DIR/mta-server.pid"
 
 SERVER_IP=$(curl -s ifconfig.me 2>/dev/null || hostname -I | awk '{print $1}')
 
