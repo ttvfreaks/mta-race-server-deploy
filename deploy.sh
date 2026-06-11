@@ -69,7 +69,7 @@ sleep 2
 SERVER_PID=$(pgrep -f "$MTA_DIR/mta-server64$" | head -1)
 echo "$SERVER_PID" > "$MTA_DIR/mta-server.pid"
 
-SERVER_IP=$(curl -s ifconfig.me 2>/dev/null || hostname -I | awk '{print $1}')
+SERVER_IP=$(curl -s v4.ident.me 2>/dev/null || hostname -I | awk '{print $1}')
 
 echo ""
 echo "================ ГОТОВО ================="
