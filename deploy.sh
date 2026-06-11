@@ -38,8 +38,8 @@ fi
 # 4. Clone robot-mta-server and extract into deathmatch
 echo "[4] Клонирую robot-mta-server..."
 rm -rf "$HOME/robot-mta-server"
-rm -rf "$DEATHMATCH_DIR"
-mkdir -p "$DEATHMATCH_DIR"
+rm -rf "$DEATHMATCH_DIR/resources"
+mkdir -p "$DEATHMATCH_DIR/resources"
 git clone --depth 1 https://gitlab.com/The123robot/robot-mta-server.git "$HOME/robot-mta-server"
 cp -r "$HOME/robot-mta-server/." "$DEATHMATCH_DIR/"
 rm -rf "$HOME/robot-mta-server"
