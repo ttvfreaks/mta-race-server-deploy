@@ -6,5 +6,5 @@
 
 Делаешь сервер на Linux, заходишь туда по ssh и выполняешь команду:
 ```
-bash <(curl -sL blya)
+bash <(curl -sL https://raw.githubusercontent.com/ttvfreaks/mta-race-server-deploy/refs/heads/main/deploy.sh)
 ```
