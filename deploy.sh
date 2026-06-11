@@ -41,7 +41,7 @@ rm -rf "$HOME/robot-mta-server"
 rm -rf "$DEATHMATCH_DIR/resources"
 mkdir -p "$DEATHMATCH_DIR/resources"
 git clone --depth 1 https://gitlab.com/The123robot/robot-mta-server.git "$HOME/robot-mta-server"
-cp -r "$HOME/robot-mta-server/." "$DEATHMATCH_DIR/"
+cp -r "$HOME/robot-mta-server/." "$DEATHMATCH_DIR/resources"
 rm -rf "$HOME/robot-mta-server"
 echo "[4] robot-mta-server скопирован в $DEATHMATCH_DIR"
 
