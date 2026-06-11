@@ -27,9 +27,9 @@ rm -f multitheftauto_linux_x64.tar.gz
 # 4. Clone robot-mta-server and extract into deathmatch
 rm -rf "$DEATHMATCH_DIR"
 mkdir -p "$DEATHMATCH_DIR"
-git clone https://gitlab.com/The123robot/robot-mta-server.git /tmp/robot-mta-server
-cp -r /tmp/robot-mta-server/. "$DEATHMATCH_DIR/"
-rm -rf /tmp/robot-mta-server
+git clone --depth 1 https://gitlab.com/The123robot/robot-mta-server.git "$HOME/robot-mta-server"
+cp -r "$HOME/robot-mta-server/." "$DEATHMATCH_DIR/"
+rm -rf "$HOME/robot-mta-server"
 
 # 5. Copy our config files to replace defaults
 cp -r "$REPO_DIR/deathmatch/." "$DEATHMATCH_DIR/"
