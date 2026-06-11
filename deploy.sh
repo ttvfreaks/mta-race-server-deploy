@@ -71,7 +71,7 @@ fi
 SERVER_IP=$(curl -s ifconfig.me 2>/dev/null || hostname -I | awk '{print $1}')
 
 echo ""
-echo "================ ГОТОВО "================"
+echo "================ ГОТОВО ================="
 echo "PID сервера:       $SERVER_PID"
 echo "IP и порт:         mtasa://$SERVER_IP:22003"
 echo " (открой в браузере — запустит игру и подключит к серверу)"
