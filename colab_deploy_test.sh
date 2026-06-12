@@ -50,26 +50,34 @@ echo "[5] Копирую свои конфиги поверх..."
 cp -r "$REPO_DIR/deathmatch/." "$DEATHMATCH_DIR/"
 
 # 6. Start or restart server
-echo "[6] Перезапускаю сервер..."
+echo "[6] Запускаю сервер в фоне..."
 
-# Остановить существующий экран, если запущен
-if command -v screen &>/dev/null && screen -ls | grep -q mta; then
-    screen -S mta -X quit
-    sleep 2
+# Остановить предыдущий процесс, если есть
+if [ -f "$MTA_DIR/mta-server.pid" ]; then
+    OLD_PID=$(cat "$MTA_DIR/mta-server.pid")
+    if kill -0 "$OLD_PID" 2>/dev/null; then
+        echo "Останавливаю старый процесс (PID: $OLD_PID)..."
+        kill "$OLD_PID" 2>/dev/null || true
+        sleep 2
+    fi
 fi
 
-if ! command -v screen &>/dev/null; then
-    echo "Устанавливаю screen..."
-    apt-get update -qq && apt-get install -y -qq screen
-fi
-
-screen -dmS mta "$MTA_DIR/mta-server64"
-sleep 2
-
-SERVER_PID=$(pgrep -f "$MTA_DIR/mta-server64$" | head -1)
+# Запускаем сервер в фоне и пишем PID
+nohup "$MTA_DIR/mta-server64" > "$MTA_DIR/mta-server.log" 2>&1 &
+SERVER_PID=$!
 echo "$SERVER_PID" > "$MTA_DIR/mta-server.pid"
+sleep 3
 
-SERVER_IP=$(curl -s v4.ident.me 2>/dev/null || hostname -I | awk '{print $1}')
+# Проверяем, жив ли процесс
+if kill -0 "$SERVER_PID" 2>/dev/null; then
+    echo "Сервер запущен (PID: $SERVER_PID)"
+else
+    echo "ОШИБКА: Сервер не запустился. Лог:"
+    tail -20 "$MTA_DIR/mta-server.log"
+fi
+
+# Пробуем узнать IP (в Colab работает curl ifconfig.me)
+SERVER_IP=$(curl -s --max-time 5 ifconfig.me 2>/dev/null || curl -s --max-time 5 v4.ident.me 2>/dev/null || echo "127.0.0.1")
 
 echo ""
 echo "================ ГОТОВО ================="
@@ -77,6 +85,6 @@ echo "PID сервера:       $SERVER_PID"
 echo "IP и порт:         mtasa://$SERVER_IP:22003"
 echo "      открой в браузере — запустит игру и подключит к серверу"
 echo "Пароль:            ETO_DURKA"
-echo "Консоль сервера:   screen -r mta"
-echo "Отключиться:       Ctrl+A, затем D"
+echo "Лог сервера:       tail -f $MTA_DIR/mta-server.log"
+echo "Остановить:        kill \$(cat $MTA_DIR/mta-server.pid)"
 echo "========================================="
